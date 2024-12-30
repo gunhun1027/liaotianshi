@@ -8,22 +8,23 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'terser',
-    chunkSizeWarningLimit: 1500,
+    sourcemap: true,
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
         manualChunks: {
-          'element-plus': ['element-plus', '@element-plus/icons-vue'],
           'vue-vendor': ['vue', 'vue-router'],
-          'socket-vendor': ['socket.io-client']
+          'element-core': ['element-plus'],
+          'element-icons': ['@element-plus/icons-vue'],
+          'socket': ['socket.io-client'],
+          'utils': ['axios']
+        },
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : [];
+          const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]';
+          return `js/${fileName}/[name].[hash].js`;
         }
-      }
-    },
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
       }
     }
   },
@@ -33,7 +34,14 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['vue', 'vue-router', 'element-plus', '@element-plus/icons-vue']
+    include: [
+      'vue',
+      'vue-router',
+      'element-plus',
+      '@element-plus/icons-vue',
+      'socket.io-client',
+      'axios'
+    ]
   },
   server: {
     port: 5173,

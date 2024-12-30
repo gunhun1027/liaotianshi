@@ -2,13 +2,14 @@
   "name": "chat-room",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "server": "nodemon server/app.js",
     "init-db": "node server/scripts/initDb.js",
-    "vercel-build": "vite build"
+    "vercel-build": "vite build --mode production"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
