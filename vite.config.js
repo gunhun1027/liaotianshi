@@ -12,11 +12,31 @@ export default defineConfig({
     minify: 'terser',
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
+      external: ['vue'],
       output: {
-        manualChunks: {
-          'element-plus': ['element-plus'],
-          'vue-vendor': ['vue', 'vue-router']
+        globals: {
+          vue: 'Vue'
+        },
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('element-plus')) {
+              return 'element-plus'
+            }
+            if (id.includes('@element-plus/icons-vue')) {
+              return 'element-plus-icons'
+            }
+            if (id.includes('vue') || id.includes('vue-router')) {
+              return 'vue-vendor'
+            }
+            return 'vendor'
+          }
         }
+      }
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
       }
     }
   },
@@ -24,6 +44,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
+  },
+  optimizeDeps: {
+    include: ['vue', 'vue-router', 'element-plus', '@element-plus/icons-vue']
   },
   server: {
     port: 5173,
