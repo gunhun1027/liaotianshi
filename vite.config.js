@@ -12,24 +12,11 @@ export default defineConfig({
     minify: 'terser',
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
-      external: ['vue'],
       output: {
-        globals: {
-          vue: 'Vue'
-        },
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('element-plus')) {
-              return 'element-plus'
-            }
-            if (id.includes('@element-plus/icons-vue')) {
-              return 'element-plus-icons'
-            }
-            if (id.includes('vue') || id.includes('vue-router')) {
-              return 'vue-vendor'
-            }
-            return 'vendor'
-          }
+        manualChunks: {
+          'element-plus': ['element-plus', '@element-plus/icons-vue'],
+          'vue-vendor': ['vue', 'vue-router'],
+          'socket-vendor': ['socket.io-client']
         }
       }
     },
