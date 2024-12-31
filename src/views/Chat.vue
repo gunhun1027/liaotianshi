@@ -97,7 +97,8 @@ import { ElMessage } from 'element-plus'
 import { Setting, SwitchButton, Position, User } from '@element-plus/icons-vue'
 
 const router = useRouter()
-const socket = io('http://localhost:3000')
+const isProd = import.meta.env.PROD
+const socket = io(isProd ? 'https://liaotianshi-phi.vercel.app' : 'http://localhost:3000')
 const messageContainer = ref(null)
 const messages = ref([])
 const messageInput = ref('')
